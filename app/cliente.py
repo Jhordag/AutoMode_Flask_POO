@@ -26,4 +26,30 @@ def home_login():
         return redirect(url_for('login', proxima=url_for('home_login')))
     return render_template('cliente_home_login.html', titulo='Home', listaplanos=listaplanos)
 
+#Autenticação
+@app.route('/login')
+def login():
+    proxima = request.args.get('proxima')
+    return render_template('cliente_login.html',proxima=proxima)
+
+@app.route('/cliente_autenticar', methods=['POST', ])
+def autenticar_cliente():
+    if request.form['usuario'] in usuarios:
+        usuario = usuarios[request.form['usuario']]
+        if usuario.senha == request.form['senha']:
+            session['usuario_logado'] = usuario.email
+            flash(usuario.email + ' logou com sucesso!')
+            proxima_pagina = request.form['proxima']
+            return redirect(proxima_pagina)
+    else:
+        flash('Não logado, tente novamente!')
+        return redirect(url_for('login'))
+
+@app.route('/logout')
+def logout():
+    session['usuario_logado'] = None
+    flash('Nenhum usuário logado!')
+    return redirect(url_for('home'))
+
+
 app.run(debug=True)
