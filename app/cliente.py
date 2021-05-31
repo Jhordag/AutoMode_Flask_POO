@@ -8,6 +8,32 @@ class Plano:
         self.nome = nome
         self.preco = preco
         self.descricao = descricao
+
+class Cliente:
+    def __init__(self, empresa, cnpj, phone, email, senha):
+        self.empresa = empresa
+        self.cnpj = cnpj
+        self.phone = phone
+        self.email = email
+        self.senha = senha
+
+class Cartao:
+    def __init__(self,parcela,numcart,dtv,cvv,nome,cpf):
+        self.parcela = parcela
+        self.numcart = numcart
+        self.dtv = dtv
+        self.cvv = cvv
+        self.nome = nome
+        self.cpf = cpf
+
+# Clientes
+cliente1 = Cliente('JOJH','12345678901234','99999000011','jojh@jojh.com','1234')
+cliente2 = Cliente('POJ','12345278921234','99999000022','poj@poj.com','1357')
+cliente3 = Cliente('KOL','12345178411234','99999000033','poj@poj.com','2468')
+usuarios = {cliente1.email: cliente1,
+            cliente2.email: cliente2,
+            cliente3.email: cliente3}
+
 #Planos
 plano1 = Plano('Básico',89.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
 plano2 = Plano('Intermediario',119.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
@@ -66,5 +92,24 @@ def autenticar_cartao():
     else:
         flash('Não foi possivel fazer a comprar!')
         return redirect(url_for('login'))
+
+# Perfil Cliente
+@app.route('/perfil')
+def perfil():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login', proxima=url_for('perfil')))
+    return render_template('cliente_perfil.html', titulo='Perfil')
+
+@app.route('/usuarios')
+def usuarios():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login', proxima=url_for('perfil')))
+    return render_template('cliente_perfil_usuario.html', titulo='Usuarios')
+
+@app.route('/mensagens')
+def mensagens():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login', proxima=url_for('perfil')))
+    return render_template('cliente_perfil_mensagem.html', titulo='Mensagens')
 
 app.run(debug=True)
