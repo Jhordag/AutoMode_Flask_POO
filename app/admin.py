@@ -11,6 +11,11 @@ class Admin:
         self.nome = nome
         self.senha = senha
 
+class Cliente:
+    def __init__(self, empresa, cnpj, plano):
+        self.empresa = empresa
+        self.cnpj = cnpj
+        self.plano = plano       
 class Funcionario():
     def __init__(self,nome,cpf,salario,cargo):
         self.nome = nome
@@ -31,6 +36,13 @@ admin3 = Admin('flavio', 'flavio Almeida', 'javascript')
 usuarios = {admin1.nome: admin1,
             admin2.nome: admin2,
             admin3.nome: admin3}
+
+# Clientes
+cliente1 = Cliente('Loja 67','46964253000186','Premium')
+cliente2 = Cliente('JUSTGOI','46964253000186','Básico')
+cliente3 = Cliente('GOIRF','46964253000186','Intermediario')
+listaclientes = [cliente1,cliente2,cliente3]
+
 
 # Funcionarios
 funcionario1 = Funcionario('Ana','1234567890',3500.00,'Dev')
