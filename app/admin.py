@@ -11,7 +11,12 @@ class Admin:
         self.nome = nome
         self.senha = senha
 
-
+# Home
+@app.route('/admin')
+def index():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login', proxima=url_for('index')))
+    return render_template('admin_home.html', titulo='Home Admin')
 
 
 # Admins
@@ -47,3 +52,9 @@ def logout():
     session['usuario_logado'] = None
     flash('Nenhum usuário logado!')
     return redirect(url_for('index'))
+
+
+
+
+
+app.run(debug=True)
