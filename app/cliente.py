@@ -51,5 +51,20 @@ def logout():
     flash('Nenhum usuário logado!')
     return redirect(url_for('home'))
 
+#Comprar Plano
+@app.route('/comprarcredit')
+def comprar():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        return redirect(url_for('login', proxima=url_for('home_login')))
+    return render_template('cliente_comprar.html', titulo='Comprar')
+
+@app.route('/autenticar_cartao', methods=['POST', ])
+def autenticar_cartao():
+    if request.form['numcart'] != None :
+        flash('Compara feita  com sucesso!')
+        return redirect(url_for('home_login'))
+    else:
+        flash('Não foi possivel fazer a comprar!')
+        return redirect(url_for('login'))
 
 app.run(debug=True)
