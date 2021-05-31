@@ -1,3 +1,4 @@
+from aula6.admin import cliente
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 
 app = Flask(__name__)
@@ -30,7 +31,7 @@ class Cartao:
 cliente1 = Cliente('JOJH','12345678901234','99999000011','jojh@jojh.com','1234')
 cliente2 = Cliente('POJ','12345278921234','99999000022','poj@poj.com','1357')
 cliente3 = Cliente('KOL','12345178411234','99999000033','poj@poj.com','2468')
-usuarios = {cliente1.email: cliente1,
+clientes = {cliente1.email: cliente1,
             cliente2.email: cliente2,
             cliente3.email: cliente3}
 
@@ -60,8 +61,8 @@ def login():
 
 @app.route('/cliente_autenticar', methods=['POST', ])
 def autenticar_cliente():
-    if request.form['usuario'] in usuarios:
-        usuario = usuarios[request.form['usuario']]
+    if request.form['usuario'] in clientes:
+        usuario = clientes[request.form['usuario']]
         if usuario.senha == request.form['senha']:
             session['usuario_logado'] = usuario.email
             flash(usuario.email + ' logou com sucesso!')
@@ -70,7 +71,7 @@ def autenticar_cliente():
     else:
         flash('Não logado, tente novamente!')
         return redirect(url_for('login'))
-
+    
 @app.route('/logout')
 def logout():
     session['usuario_logado'] = None
