@@ -1,14 +1,24 @@
+from flask_mysqldb import MySQL
 from flask import Flask, render_template, request, redirect, session, flash, url_for
-
+import os
+import mysql.connector
 app = Flask(__name__)
 app.secret_key = 'BiaUFGPOO'
+mysql =  mysql.connector.connect (host = ("lg3bot.cxp5nvrsoub5.us-east-2.rds.amazonaws.com"), 
+            user =  ("admin"), 
+              password = ("Lg3botisaproduct"), 
+              db =  ("POO"),)
+
+'''mysql.init_app(app)'''
+
+
 
 
 
 class Admin:
-    def __init__(self, id, nome, senha):
+    def __init__(self, id, email, senha):
         self.id = id
-        self.nome = nome
+        self.email = email
         self.senha = senha
 
 class Cliente:
@@ -33,9 +43,9 @@ class Plano:
 admin1 = Admin('luan', 'Luan Marques', '1234')
 admin2 = Admin('Nico', 'Nico Steppat', '7a1')
 admin3 = Admin('flavio', 'flavio Almeida', 'javascript')
-usuarios = {admin1.nome: admin1,
-            admin2.nome: admin2,
-            admin3.nome: admin3}
+usuarios = {admin1.email: admin1,
+            admin2.email: admin2,
+            admin3.email: admin3}
 
 # Clientes
 cliente1 = Cliente('Loja 67','46964253000186','Premium')
@@ -56,6 +66,9 @@ plano2 = Plano('Intermediario',119.00, 'Lorem ipsum dolor sit amet, consectetur 
 plano3 = Plano('Premium',159.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
 listaplanos = [plano1,plano2,plano3]
 
+
+
+
 # Home
 @app.route('/admin')
 def index():
@@ -71,11 +84,17 @@ def login():
 
 @app.route('/admin_autenticar', methods=['POST', ])
 def autenticar_admin():
+    cursor = mysql.cursor()
+    sql1 = f"SELECT * FROM  accessClient WHERE Email='{request.form['usuario']}' AND senha='{request.form['senha']}' "
+    cursor.execute(sql1)
+    profile = cursor.fetchall()
+    print(profile)
+    
     if request.form['usuario'] in usuarios:
         usuario = usuarios[request.form['usuario']]
         if usuario.senha == request.form['senha']:
-            session['usuario_logado'] = usuario.nome
-            flash(usuario.nome + ' logou com sucesso!')
+            session['usuario_logado'] = usuario.email
+            flash(usuario.email + ' logou com sucesso!')
             proxima_pagina = request.form['proxima']
             return redirect(proxima_pagina)
     else:
