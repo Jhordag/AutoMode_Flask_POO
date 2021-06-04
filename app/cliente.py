@@ -1,5 +1,8 @@
 from flask import Flask, render_template, request, redirect, session, flash, url_for
 from app import app
+import mysql.connector
+
+app.secret_key = 'BiaUFGPOO'
 
 
 class Plano:
@@ -48,13 +51,13 @@ listaplanos = [plano1, plano2, plano3]
 
 @app.route("/")
 @app.route("/index")
-def home():
+def inicio():
     return render_template('index.html')
 
 
 # Home Cliente
 @app.route('/cliente')
-def home():
+def home_cliente():
     return render_template('cliente_home.html', titulo='Planos', listaplanos=listaplanos)
 
 
@@ -133,3 +136,23 @@ def mensagens():
     return render_template('cliente_perfil_mensagem.html', titulo='Mensagens')
 
 
+# Cadastro
+@app.route('/cadastro')
+def cadastro():
+    return render_template('cliente_cadastro.html', titulo='Cadastro Cliente')
+
+
+@app.route('/salvarcadastro', methods=['POST', ])
+def salvar_cliente():
+    db = mysql.connector.connect(user='admin', password='Lg3botisaproduct',
+                                 host='lg3bot.cxp5nvrsoub5.us-east-2.rds.amazonaws.com',
+                                 database='POO')
+
+    cursor = db.cursor()
+    sql1 = "INSERT INTO CLIENTES (Nome_Empresa, CNPJ, Phone, Email, Senha) VALUES(%s, %s, %s,%s,%s)"
+    datas = (
+    request.form['nome_emp'], request.form['cnpj'], request.form['phone'], request.form['email'], request.form['senha'])
+    cursor.execute(sql1, datas)
+    db.commit()
+    cursor.close()
+    return redirect(url_for('home'))
