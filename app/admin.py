@@ -10,11 +10,6 @@ mysql =  mysql.connector.connect (host = ("lg3bot.cxp5nvrsoub5.us-east-2.rds.ama
               password = ("Lg3botisaproduct"), 
               db =  ("POO"),)
 
-'''mysql.init_app(app)'''
-
-
-
-
 
 class Admin:
     def __init__(self, id, email, senha):
@@ -88,6 +83,16 @@ def admin_login():
     proxima = request.args.get('proxima')
     return render_template('admin_login.html', proxima=proxima)
 
+
+######################### Gabriel Urzeda #################################
+'''
+Deve usar os dados que estão presentes na tabela Admin para validar a entrada 
+na pagina.
+Lembra-se que tem os funcionarios é os admins então deve ter um redimensionamento 
+de paginas diferentes para eles.
+o def autenticar_cliente() no arquino cliente.py pode ser usado com exemplo
+'''
+########################################################################
 @app.route('/admin_autenticar', methods=['POST', ])
 def autenticar_admin():
     
@@ -115,12 +120,25 @@ def admin_logout():
     return redirect(url_for('index'))
 
 # Rotas Funcionarios
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar as informação da  tabela admin para serem rederizadas 
+para isso deve se usar passar uma lista de todos os usuarios para trabalhadores
+'''
+########################################################################
 @app.route('/admin_funcionarios')
 def funcionarios():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login', proxima=url_for('admin_funcionarios')))
     return render_template('admin_funcionario.html', titulo='Funcionarios', trabalhadores = trabalhadores)
 
+
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar a tabela admin para salvar as informações
+A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
+'''
+########################################################################
 @app.route('/criarfunc', methods=['POST',])
 def criarfunc():
     nome = request. form['nome']
@@ -132,6 +150,18 @@ def criarfunc():
     return redirect(url_for('funcionarios'))
 
 # Rotas dos Planos
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar as informação da  tabela planos para serem rederizadas 
+para isso deve se usar passar uma lista de todos os planos para listaplanos
+'''
+########################################################################
+
+######################### Gabriel Marques ##############################
+'''
+Deve ser possivel editar ou excluir plano
+'''
+########################################################################
 @app.route('/admin_planos')
 def planos():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
@@ -144,6 +174,12 @@ def admin_planos():
         return redirect(url_for('login', proxima=url_for('admin_novo_plano')))
     return render_template('admin_criar_plano.html', titulo='Novo Plano')
 
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar a tabela plano para salvar as informações
+A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
+'''
+########################################################################
 @app.route('/criarplano', methods=['POST',])
 def criarplano():
     nome = request. form['nome']
@@ -154,6 +190,13 @@ def criarplano():
     return redirect(url_for('planos'))
 
 # Rotas Clientes
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar as informação da  tabela CLIENTES para serem rederizadas 
+para isso deve se usar passar uma lista de todos os clientes cadastrados 
+para listaclientes
+'''
+########################################################################
 @app.route('/admin_cliente')
 def cliente():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:

@@ -48,10 +48,21 @@ def inicio():
     return render_template('index.html')
 
 # Home Cliente
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar as informação da  tabela planos para serem rederizadas 
+para isso deve se usar passar uma lista de todos os planos para listaplanos
+'''
+########################################################################
 @app.route('/home')
 def home():
     return render_template('cliente_home.html', titulo='Planos', listaplanos=listaplanos)
-
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar as informação da  tabela planos para serem rederizadas 
+para isso deve se usar passar uma lista de todos os planos para listaplanos
+'''
+########################################################################
 @app.route('/home_login')
 def home_login():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
@@ -122,6 +133,12 @@ def comprar():
         return redirect(url_for('login', proxima=url_for('home_login')))
     return render_template('cliente_comprar.html', titulo='Comprar')
 
+######################### Gabriel Marques ##############################
+'''
+Deve fazer aparecer uma mensagen de compra feita com sucesso
+exemplo def autenticar_cliente() e o cliente_login.html
+'''
+########################################################################
 @app.route('/autenticar_cartao', methods=['POST', ])
 def autenticar_cartao():
     if request.form['numcart'] != None :
@@ -138,12 +155,31 @@ def perfil():
         return redirect(url_for('login', proxima=url_for('perfil')))
     return render_template('cliente_perfil.html', titulo='Perfil')
 
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar as informação da  tabela usuarios para serem rederizadas 
+para isso deve se usar passar uma lista de todos os usuarios para users_cliente
+'''
+########################################################################
+
+######################### Gabriel Marques ##############################
+'''
+Deve fazer aparecer uma mensagen de usuario cadastrado com sucesso
+exemplo def autenticar_cliente() e o cliente_login.html
+'''
+########################################################################
 @app.route('/usuarios')
 def usuarios():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         return redirect(url_for('login', proxima=url_for('perfil')))
     return render_template('cliente_perfil_usuario.html', titulo='Usuarios',users_cliente = users_cliente)
 
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar a tabela usuarios para salvar as informações
+A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
+'''
+########################################################################
 @app.route('/cadastrousuario', methods=['POST',])
 def criarusuarios():
     nome = request. form['nome']
@@ -152,7 +188,19 @@ def criarusuarios():
     users_cliente.append(user)
     return redirect(url_for('usuarios'))
 
+######################### Gabriel Urzeda #################################
+'''
+Deve Usar a tabela mensagem para salvar as informações
+A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
+'''
+########################################################################
 
+######################### Gabriel Marques ##############################
+'''
+Deve fazer aparecer uma mensagen de mensagens enviadas com sucesso
+exemplo def autenticar_cliente() e o cliente_login.html
+'''
+########################################################################
 @app.route('/mensagens')
 def mensagens():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
