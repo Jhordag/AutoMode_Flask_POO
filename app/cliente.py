@@ -41,11 +41,14 @@ clientes = {cliente1.email: cliente1,
 
 # Planos
 plano1 = Plano('Básico', 89.00,
-               'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
+               'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus '
+               'tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
 plano2 = Plano('Intermediario', 119.00,
-               'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
+               'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus '
+               'tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
 plano3 = Plano('Premium', 159.00,
-               'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
+               'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus '
+               'tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
 listaplanos = [plano1, plano2, plano3]
 
 
@@ -99,14 +102,14 @@ def logout():
 # Comprar Plano
 @app.route('/comprarcredit')
 def comprar():
-    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+    if 'usuario_logado' not in session or session['usuario_logado'] is None:
         return redirect(url_for('login', proxima=url_for('home_login')))
     return render_template('cliente_comprar.html', titulo='Comprar')
 
 
 @app.route('/autenticar_cartao', methods=['POST', ])
 def autenticar_cartao():
-    if request.form['numcart'] != None:
+    if request.form['numcart'] is not None:
         flash('Compara feita  com sucesso!')
         return redirect(url_for('home_login'))
     else:
@@ -151,7 +154,8 @@ def salvar_cliente():
     cursor = db.cursor()
     sql1 = "INSERT INTO CLIENTES (Nome_Empresa, CNPJ, Phone, Email, Senha) VALUES(%s, %s, %s,%s,%s)"
     datas = (
-    request.form['nome_emp'], request.form['cnpj'], request.form['phone'], request.form['email'], request.form['senha'])
+        request.form['nome_emp'], request.form['cnpj'], request.form['phone'], request.form['email'],
+        request.form['senha'])
     cursor.execute(sql1, datas)
     db.commit()
     cursor.close()
