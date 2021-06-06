@@ -37,17 +37,6 @@ class Plano:
 
 
 
-
-
-
-# Admins
-admin1 = Admin('luan', 'Luan Marques', '1234')
-admin2 = Admin('Nico', 'Nico Steppat', '7a1')
-admin3 = Admin('flavio', 'flavio Almeida', 'javascript')
-usuarios = {admin1.email: admin1,
-            admin2.email: admin2,
-            admin3.email: admin3}
-
 # Clientes
 cursor = db.cursor()
 sql1 = f"SELECT * FROM  CLIENTES"
@@ -116,30 +105,6 @@ def admin_logout():
     return redirect(url_for('index'))
 
 
-@app.route('/funcionario_autenticar', methods=['POST', ])
-def autenticar_funcionario():
-    
-    cursor = mysql.cursor()
-    sql1 = f"SELECT * FROM  acessFuncionario WHERE Email='{request.form['usuario']}' AND senha='{request.form['senha']}' "
-    cursor.execute(sql1)
-    profile = cursor.fetchall()
-    print(profile)
-    
-    if len(profile) != 0:
-        session['usuario_logado'] = profile[0][1]
-        flash(profile[0][1] + ' logou com sucesso!')
-        proxima_pagina = request.form['proxima']
-        return redirect(proxima_pagina)
-    else:
-        flash('Não logado, tente novamente!')
-        return redirect(url_for('admin_login'))
-
-
-@app.route('/funcionario_logout')
-def funcionario_logout():
-    session['usuario_logado'] = None
-    flash('Nenhum usuário logado!')
-    return redirect(url_for('index'))
 # Rotas Funcionarios
 ######################### Gabriel Urzeda #################################
 '''
@@ -167,7 +132,6 @@ def criarfunc():
     datas = (request.form['nome'],request.form['cpf'],request.form['salario'],request.form['cargo'])
     cursor.execute(sql1, datas)
     db.commit()
-    cursor.close()
     return redirect(url_for('funcionarios'))
 
 # Rotas dos Planos
@@ -208,7 +172,6 @@ def criarplano():
     datas = (request.form['nome'],request.form['preco'],request.form['descricao'])
     cursor.execute(sql1, datas)
     db.commit()
-    cursor.close()
     return redirect(url_for('planos'))
 
 # Rotas Clientes

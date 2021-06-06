@@ -42,7 +42,6 @@ cursor = db.cursor()
 sql1 = f"SELECT * FROM  Plano"
 cursor.execute(sql1)
 listaplanos = cursor.fetchall()
-print(listaplanos)
 
 
 #Usuarios
@@ -117,17 +116,12 @@ def cadastro():
     return render_template('cliente_cadastro.html', titulo='Cadastro Cliente')
 
 @app.route('/salvarcadastro',methods=['POST', ])
-def salvar_cliente():
-    db = mysql.connector.connect(user='admin', password='Lg3botisaproduct',
-                             host='lg3bot.cxp5nvrsoub5.us-east-2.rds.amazonaws.com',
-                             database='POO')  
-   
+def salvar_cliente():   
     cursor = db.cursor()
     sql1 = "INSERT INTO CLIENTES (Nome_Empresa, CNPJ, Phone, Email, Senha) VALUES('%s', '%s', '%s','%s','%s')"
     datas = (request.form['nome_emp'],request.form['cnpj'],request.form['phone'],request.form['email'],request.form['senha'])
     cursor.execute(sql1, datas)
     db.commit()
-    cursor.close()
     return redirect(url_for('home'))
 
 
@@ -189,8 +183,11 @@ A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
 def criarusuarios():
     nome = request. form['nome']
     phone= request. form['phone']
-    user = Usuarios( nome,phone)
-    users_cliente.append(user)
+    cursor = db.cursor()
+    sql1 = "INSERT INTO Usuarios (Nome, Phone) VALUES('%s', '%s')"
+    datas = (request.form['Nome'],request.form['Phone'])
+    cursor.execute(sql1, datas)
+    db.commit()
     return redirect(url_for('usuarios'))
 
 ######################### Gabriel Urzeda #################################
