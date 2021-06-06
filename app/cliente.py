@@ -2,6 +2,11 @@ from app  import app
 from flask import  render_template, request, redirect, session, flash, url_for
 import mysql.connector
 
+
+db = mysql.connector.connect(user='admin', password='Lg3botisaproduct',
+                             host='lg3bot.cxp5nvrsoub5.us-east-2.rds.amazonaws.com',
+                             database='POO')  
+
 app.secret_key = 'BiaUFGPOO'
 class Plano:
     def __init__(self, nome, preco, descricao):
@@ -33,14 +38,19 @@ class Cadastro:
 
 
 #Planos
-plano1 = Plano('Básico',89.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
-plano2 = Plano('Intermediario',119.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
-plano3 = Plano('Premium',159.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
-listaplanos = [plano1,plano2,plano3]
+cursor = db.cursor()
+sql1 = f"SELECT * FROM  Plano"
+cursor.execute(sql1)
+listaplanos = cursor.fetchall()
+print(listaplanos)
+
 
 #Usuarios
-usuario1 = Usuarios('Hugo','12345678')
-users_cliente =[usuario1]
+cursor = db.cursor()
+sql1 = f"SELECT * FROM  CLIENTES"
+cursor.execute(sql1)
+users_cliente = cursor.fetchall()
+
 
 
 @app.route("/")
@@ -77,24 +87,19 @@ def login():
 
 @app.route('/cliente_autenticar', methods=['POST', ])
 def autenticar_cliente():
-    db = mysql.connector.connect(user='admin', password='Lg3botisaproduct',
-                             host='lg3bot.cxp5nvrsoub5.us-east-2.rds.amazonaws.com',
-                             database='POO')  
+
     cursor = db.cursor()
-    sql1 = f"SELECT * FROM  CLIENTES WHERE Email='{request.form['usuario']}' AND Senha='{request.form['senha']}' "
+    sql1 = f"SELECT * FROM  acessClient WHERE Email='{request.form['usuario']}' AND Senha='{request.form['senha']}' "
     cursor.execute(sql1)
     profile = cursor.fetchall()
     print(profile)
     
     if len(profile) != 0:
-        if request.form['usuario'] == profile[0][4]:
-            print('Entrou')
-            if profile[0][5] == request.form['senha']:
-                print('Entrou')
-                session['usuario_logado'] = profile[0][4]
-                flash(profile[0][1] + ' logou com sucesso!')
-                proxima_pagina = request.form['proxima']
-                return redirect(proxima_pagina)
+        print('Entrou')
+        session['usuario_logado'] = profile[0][1]
+        flash(profile[0][1] + ' logou com sucesso!')
+        proxima_pagina = request.form['proxima']
+        return redirect(proxima_pagina)
     else:
         flash('Não logado, tente novamente!')
         return redirect(url_for('login'))
@@ -118,7 +123,7 @@ def salvar_cliente():
                              database='POO')  
    
     cursor = db.cursor()
-    sql1 = "INSERT INTO CLIENTES (Nome_Empresa, CNPJ, Phone, Email, Senha) VALUES(%s, %s, %s,%s,%s)"
+    sql1 = "INSERT INTO CLIENTES (Nome_Empresa, CNPJ, Phone, Email, Senha) VALUES('%s', '%s', '%s','%s','%s')"
     datas = (request.form['nome_emp'],request.form['cnpj'],request.form['phone'],request.form['email'],request.form['senha'])
     cursor.execute(sql1, datas)
     db.commit()

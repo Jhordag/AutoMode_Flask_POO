@@ -6,9 +6,9 @@ from flask import  render_template, request, redirect, session, flash, url_for
 
 app.secret_key = 'BiaUFGPOO'
 mysql =  mysql.connector.connect (host = ("lg3bot.cxp5nvrsoub5.us-east-2.rds.amazonaws.com"), 
-            user =  ("admin"), 
-              password = ("Lg3botisaproduct"), 
-              db =  ("POO"),)
+                                  user =  ("admin"), 
+                                  password = ("Lg3botisaproduct"), 
+                                  db =  ("POO"))
 
 
 class Admin:
@@ -49,25 +49,23 @@ usuarios = {admin1.email: admin1,
             admin3.email: admin3}
 
 # Clientes
-cliente1 = Cliente('Loja 67','46964253000186','Premium')
-cliente2 = Cliente('JUSTGOI','46964253000186','Básico')
-cliente3 = Cliente('GOIRF','46964253000186','Intermediario')
-listaclientes = [cliente1,cliente2,cliente3]
+cursor = db.cursor()
+sql1 = f"SELECT * FROM  CLIENTES"
+cursor.execute(sql1)
+listaclientes = cursor.fetchall()
 
 
 # Funcionarios
-funcionario1 = Funcionario('Ana','1234567890',3500.00,'Dev')
-funcionario2 = Funcionario('Pedro','4234447890',3500.00,'Dev')
-funcionario3 = Funcionario('Maria','4235677890',3000.00,'UX')
-trabalhadores = [funcionario1, funcionario2, funcionario3]
+cursor = db.cursor()
+sql1 = f"SELECT * FROM  Funcionarios"
+cursor.execute(sql1)
+trabalhadores = cursor.fetchall()
 
 # Planos
-plano1 = Plano('Básico',89.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
-plano2 = Plano('Intermediario',119.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
-plano3 = Plano('Premium',159.00, 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi ornare, turpis vitae faucibus tincidunt, erat sem commodo sem, eget dapibus leo nisi non est.')
-listaplanos = [plano1,plano2,plano3]
-
-
+cursor = db.cursor()
+sql1 = f"SELECT * FROM  Planos"
+cursor.execute(sql1)
+listaplanos = cursor.fetchall()
 
 
 # Home
@@ -97,18 +95,16 @@ o def autenticar_cliente() no arquino cliente.py pode ser usado com exemplo
 def autenticar_admin():
     
     cursor = mysql.cursor()
-    sql1 = f"SELECT * FROM  accessClient WHERE Email='{request.form['usuario']}' AND senha='{request.form['senha']}' "
+    sql1 = f"SELECT * FROM  acessAdmin WHERE Email='{request.form['usuario']}' AND senha='{request.form['senha']}' "
     cursor.execute(sql1)
     profile = cursor.fetchall()
     print(profile)
-    
-    if request.form['usuario'] in usuarios:
-        usuario = usuarios[request.form['usuario']]
-        if usuario.senha == request.form['senha']:
-            session['usuario_logado'] = usuario.email
-            flash(usuario.email + ' logou com sucesso!')
-            proxima_pagina = request.form['proxima']
-            return redirect(proxima_pagina)
+
+    if len(profile) != 0:
+        session['usuario_logado'] = profile[0][1]
+        flash(profile[0][1] + ' logou com sucesso!')
+        proxima_pagina = request.form['proxima']
+        return redirect(proxima_pagina)
     else:
         flash('Não logado, tente novamente!')
         return redirect(url_for('admin_login'))
@@ -119,6 +115,31 @@ def admin_logout():
     flash('Nenhum usuário logado!')
     return redirect(url_for('index'))
 
+
+@app.route('/funcionario_autenticar', methods=['POST', ])
+def autenticar_funcionario():
+    
+    cursor = mysql.cursor()
+    sql1 = f"SELECT * FROM  acessFuncionario WHERE Email='{request.form['usuario']}' AND senha='{request.form['senha']}' "
+    cursor.execute(sql1)
+    profile = cursor.fetchall()
+    print(profile)
+    
+    if len(profile) != 0:
+        session['usuario_logado'] = profile[0][1]
+        flash(profile[0][1] + ' logou com sucesso!')
+        proxima_pagina = request.form['proxima']
+        return redirect(proxima_pagina)
+    else:
+        flash('Não logado, tente novamente!')
+        return redirect(url_for('admin_login'))
+
+
+@app.route('/funcionario_logout')
+def funcionario_logout():
+    session['usuario_logado'] = None
+    flash('Nenhum usuário logado!')
+    return redirect(url_for('index'))
 # Rotas Funcionarios
 ######################### Gabriel Urzeda #################################
 '''
@@ -141,12 +162,12 @@ A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
 ########################################################################
 @app.route('/criarfunc', methods=['POST',])
 def criarfunc():
-    nome = request. form['nome']
-    cpf = request. form['cpf']
-    salario = request. form['salario']
-    cargo = request. form['cargo']
-    func = Funcionario( nome,cpf,salario,cargo)
-    trabalhadores.append(func)
+    cursor = db.cursor()
+    sql1 = "INSERT INTO Funcionarios (nome, cpf, salario, cargo) VALUES('%s', '%s', '%s', '%s')"
+    datas = (request.form['nome'],request.form['cpf'],request.form['salario'],request.form['cargo'])
+    cursor.execute(sql1, datas)
+    db.commit()
+    cursor.close()
     return redirect(url_for('funcionarios'))
 
 # Rotas dos Planos
@@ -182,11 +203,12 @@ A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
 ########################################################################
 @app.route('/criarplano', methods=['POST',])
 def criarplano():
-    nome = request. form['nome']
-    preco = request. form['preco']
-    descricao = request. form['descricao']
-    plano = Plano( nome,preco,descricao)
-    listaplanos.append(plano)
+    cursor = db.cursor()
+    sql1 = "INSERT INTO Plano (Nome, Preco, Descricao) VALUES('%s', '%s', '%s')"
+    datas = (request.form['nome'],request.form['preco'],request.form['descricao'])
+    cursor.execute(sql1, datas)
+    db.commit()
+    cursor.close()
     return redirect(url_for('planos'))
 
 # Rotas Clientes
