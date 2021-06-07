@@ -33,8 +33,16 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
-
-    <form action="{{ url_for('criarusuarios') }}" method="post">
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="messages" class="list-unstyled">
+                {% for message in messages %}
+                    <li class="alert alert-success">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+    <form action="{{ url_for('validarmensagem') }}" method="post">
         <fieldset>
           <div class="form-group">
             <label for="mensagem">Mensagem</label>

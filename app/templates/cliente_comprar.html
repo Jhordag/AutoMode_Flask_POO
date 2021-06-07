@@ -27,7 +27,15 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
-
+    {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul id="messages" class="list-unstyled">
+                {% for message in messages %}
+                    <li class="alert alert-success">{{ message }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
     <form action="{{ url_for('autenticar_cartao') }}" method="post">
         <fieldset>
           <div class="form-group">
