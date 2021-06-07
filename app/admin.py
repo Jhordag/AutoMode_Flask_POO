@@ -55,18 +55,6 @@ def admin_login():
     proxima = request.args.get('proxima')
     return render_template('admin_login.html', proxima=proxima)
 
-
-######################### Gabriel Urzeda #################################
-'''
-Deve usar os dados que estão presentes na tabela Admin para validar a entrada 
-na pagina.
-Lembra-se que tem os funcionarios é os admins então deve ter um redimensionamento 
-de paginas diferentes para eles.
-o def autenticar_cliente() no arquino cliente.py pode ser usado com exemplo
-'''
-
-
-########################################################################
 @app.route('/admin_autenticar', methods=['POST', ])
 def autenticar_admin():
     cursor = db.cursor()
@@ -93,14 +81,6 @@ def admin_logout():
 
 
 # Rotas Funcionarios
-######################### Gabriel Urzeda #################################
-'''
-Deve Usar as informação da  tabela admin para serem rederizadas 
-para isso deve se usar passar uma lista de todos os usuarios para trabalhadores
-'''
-
-
-########################################################################
 @app.route('/admin_funcionarios')
 def funcionarios():
     # Funcionarios
@@ -117,14 +97,6 @@ def funcionarios():
     return render_template('admin_funcionario.html', titulo='Funcionarios', trabalhadores=listatrabalhadores)
 
 
-######################### Gabriel Urzeda #################################
-'''
-Deve Usar a tabela admin para salvar as informações
-A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
-'''
-
-
-########################################################################
 @app.route('/criarfunc', methods=['POST', ])
 def criarfunc():
     cursor = db.cursor()
@@ -136,20 +108,6 @@ def criarfunc():
 
 
 # Rotas dos Planos
-######################### Gabriel Urzeda #################################
-'''
-Deve Usar as informação da  tabela planos para serem rederizadas 
-para isso deve se usar passar uma lista de todos os planos para listaplanos
-'''
-########################################################################
-
-######################### Gabriel Marques ##############################
-'''
-Deve ser possivel editar ou excluir plano
-'''
-
-
-########################################################################
 @app.route('/admin_planos')
 def planos():
     # Planos
@@ -172,15 +130,6 @@ def admin_planos():
         return redirect(url_for('login', proxima=url_for('admin_novo_plano')))
     return render_template('admin_criar_plano.html', titulo='Novo Plano')
 
-
-######################### Gabriel Urzeda #################################
-'''
-Deve Usar a tabela plano para salvar as informações
-A função def salvar_cliente() do arquivo cliente.py pode servir de exemplo
-'''
-
-
-########################################################################
 @app.route('/criarplano', methods=['POST', ])
 def criarplano():
     cursor = db.cursor()
@@ -190,17 +139,6 @@ def criarplano():
     db.commit()
     return redirect(url_for('planos'))
 
-
-# Rotas Clientes
-######################### Gabriel Urzeda #################################
-'''
-Deve Usar as informação da  tabela CLIENTES para serem rederizadas 
-para isso deve se usar passar uma lista de todos os clientes cadastrados 
-para listaclientes
-'''
-
-
-########################################################################
 @app.route('/admin_cliente')
 def cliente():
     # Clientes
